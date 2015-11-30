@@ -12,7 +12,8 @@ function replaceLocal(string, regexp, replacer, callback) {
     if (!matched)
         return callback(null, string);
 
-    var args = matched.slice();
+    var args = [];
+    args.push(matched.slice());
     args.push(matched.index);
     args.push(matched.input);
     args.push(function(err, newString) {
@@ -20,11 +21,11 @@ function replaceLocal(string, regexp, replacer, callback) {
 
         callback(null, string.replace(regexp, newString));
     });
-
+    console.log(args);
     replacer.apply(null, args);
 }
 
-module.exports = function(string, regexp, replacer, callback) {
+ module.exports = function(string, regexp, replacer, callback) {
     if (!regexp.global) return replaceLocal(string, regexp, replacer, callback);
 
     var matched = string.match(regexp);
@@ -52,7 +53,8 @@ module.exports = function(string, regexp, replacer, callback) {
         (function(j, index, subString) {
             callbacks.push(function(done) {
                 var match = subString.match(copy);
-                var args = match.slice();
+                var args = [];
+                args.push(match.slice());
                 args.push(index);
                 args.push(string);
                 args.push(function(err, newString) {
@@ -72,4 +74,4 @@ module.exports = function(string, regexp, replacer, callback) {
         if (err) return callback(err);
         callback(null, result.join(''));
     });
-}
+};
